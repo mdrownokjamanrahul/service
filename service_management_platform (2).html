@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সেবা ম্যানেজমেন্ট প্ল্যাটফর্ম</title>
+    <link rel="shortcut icon" href="img/service.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .auth-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,123,255,0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .dashboard {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #007bff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .service-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .orders-section {
+            margin-top: 30px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .order-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #cce7ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-cancel { 
+            background: #f3f0f0;
+            color: #e43838;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .admin-section {
+            margin-top: 30px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: #007bff;
+        }
+
+        .file-upload.dragover {
+            border-color: #007bff;
+            background: rgba(0,123,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        .debug-info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-width: 300px;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+            transition: transform 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .report-card.pending {
+            border-left-color: #ffc107;
+        }
+
+        .report-card.processing {
+            border-left-color: #17a2b8;
+        }
+
+        .report-card.completed {
+            border-left-color: #28a745;
+        }
+        .report-card.cancel {
+            border-left-color: #cfe21f;
+        }
+
+
+        .report-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .report-label {
+            color: #666;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .report-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .report-filters .btn {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .report-filters .btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ সেবা ম্যানেজমেন্ট প্ল্যাটফর্ম</h1>
+            <p style="color: rgba(255,255,255,0.9); font-size: 1.1em;">আপনার সব সেবা এক জায়গায়</p>
+        </div>
+
+        <!-- Authentication Section -->
+        <div id="authSection" class="auth-section">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showAuthTab('login')">লগইন</button>
+                <button class="tab-button" onclick="showAuthTab('register')">রেজিস্টার</button>
+            </div>
+
+            <div id="loginTab">
+                <h2 style="margin-bottom: 20px;">লগইন করুন</h2>
+                <div class="form-group">
+                    <label>ইমেইল</label>
+                    <input type="email" id="loginEmail" placeholder="আপনার ইমেইল লিখুন">
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড লিখুন">
+                </div>
+                <button class="btn btn-primary" onclick="window.login()" style="width: 100%;">লগইন</button>
+            </div>
+
+            <div id="registerTab" class="hidden">
+                <h2 style="margin-bottom: 20px;">নতুন অ্যাকাউন্ট</h2>
+                <div class="form-group">
+                    <label>নাম</label>
+                    <input type="text" id="registerName" placeholder="আপনার নাম লিখুন">
+                </div>
+                <div class="form-group">
+                    <label>ফোন নাম্বার</label>
+                    <input type="tel" id="registerPhone" placeholder="01XXXXXXXXX (১১ ডিজিট)">
+                </div>
+                <div class="form-group">
+                    <label>ইমেইল</label>
+                    <input type="email" id="registerEmail" placeholder="ইমেইল অ্যাড্রেস">
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="registerPassword" placeholder="শক্তিশালী পাসওয়ার্ড">
+                </div>
+
+                <button class="btn btn-primary" onclick="window.register()" style="width: 100%;">রেজিস্টার</button>
+            </div>
+        </div>
+
+        <!-- User Dashboard -->
+        <div id="userDashboard" class="dashboard">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div>
+                        <h3 id="userName">ব্যবহারকারী</h3>
+                        <p style="color: #666; margin: 0;">সাধারণ ব্যবহারকারী</p>
+                    </div>
+                </div>
+                <button class="btn btn-danger" onclick="window.logout()">লগআউট</button>
+            </div>
+
+            <h3>উপলব্ধ সেবাসমূহ</h3>
+            <div id="servicesGrid" class="services-grid">
+                <!-- Services will be loaded here -->
+            </div>
+
+            <div class="orders-section">
+                <h3>আমার অর্ডারসমূহ</h3>
+                <div id="userOrders">
+                    <!-- User orders will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="dashboard">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="user-avatar" id="adminAvatar">A</div>
+                    <div>
+                        <h3 id="adminName">অ্যাডমিন</h3>
+                        <p style="color: #666; margin: 0;">সিস্টেম অ্যাডমিনিস্ট্রেটর</p>
+                    </div>
+                </div>
+                <button class="btn btn-danger" onclick="window.logout()">লগআউট</button>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="showAdminTab('services')">সেবা ব্যবস্থাপনা</button>
+                    <button class="admin-tab" onclick="showAdminTab('orders')">অর্ডার ব্যবস্থাপনা</button>
+                    <button class="admin-tab" onclick="showAdminTab('reports')">রিপোর্ট</button>
+                </div>
+
+                <div id="adminServicesTab">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>সেবা তালিকা</h3>
+                        <button class="btn btn-primary" onclick="window.openAddServiceModal()">নতুন সেবা যোগ করুন</button>
+                    </div>
+                    <div id="adminServicesGrid" class="services-grid">
+                        <!-- Admin services will be loaded here -->
+                    </div>
+                </div>
+
+                <div id="adminOrdersTab" class="hidden">
+                    <h3>সকল অর্ডার</h3>
+                    <div id="adminOrders">
+                        <!-- All orders will be loaded here -->
+                    </div>
+                </div>
+
+                <div id="adminReportsTab" class="hidden">
+                    <h3>রিপোর্ট</h3>
+                    
+                    <!-- Report Summary Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div class="report-card">
+                            <div class="report-number" id="totalOrders">0</div>
+                            <div class="report-label">সকল অর্ডার</div>
+                        </div>
+                        <div class="report-card pending">
+                            <div class="report-number" id="pendingOrders">0</div>
+                            <div class="report-label">অপেক্ষমান</div>
+                        </div>
+                        <div class="report-card processing">
+                            <div class="report-number" id="processingOrders">0</div>
+                            <div class="report-label">প্রক্রিয়াধীন</div>
+                        </div>
+                        <div class="report-card completed">
+                            <div class="report-number" id="completedOrders">0</div>
+                            <div class="report-label">সম্পন্ন</div>
+                        </div>
+                            <div class="report-card cancel">
+                            <div class="report-number" id="cancelOrders">0</div>
+                            <div class="report-label">বাতিল</div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="report-filters" style="margin-bottom: 20px;">
+                        <button class="btn btn-primary active" onclick="showOrdersByStatus('all')">সকল অর্ডার</button>
+                        <button class="btn btn-warning" onclick="showOrdersByStatus('pending')">অপেক্ষমান</button>
+                        <button class="btn btn-info" onclick="showOrdersByStatus('processing')">প্রক্রিয়াধীন</button>
+                        <button class="btn btn-success" onclick="showOrdersByStatus('completed')">সম্পন্ন</button>
+                        <button class="btn btn-success" onclick="showOrdersByStatus('cancel')">বাতিল</button>
+                    </div>
+
+                    <!-- Filtered Orders Display -->
+                    <div id="reportOrders">
+                        <!-- Filtered orders will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div id="addServiceModal" class="modal">
+        <div class="modal-content">
+            <h3>নতুন সেবা যোগ করুন</h3>
+            <div class="form-group">
+                <label>সেবার নাম</label>
+                <input type="text" id="serviceName" placeholder="সেবার নাম লিখুন">
+            </div>
+            <div class="form-group">
+                <label>বিবরণ</label>
+                <textarea id="serviceDescription" rows="3" placeholder="সেবার বিস্তারিত বিবরণ"></textarea>
+            </div>
+            <div class="form-group">
+                <label>মূল্য (টাকা)</label>
+                <input type="number" id="servicePrice" placeholder="মূল্য লিখুন">
+            </div>
+            <div class="form-group">
+                <label>ডেলিভারি সময়</label>
+                <input type="text" id="deliveryTime" placeholder="কত দিন লাগবে">
+            </div>
+            
+            <div class="form-group">
+                <label>অর্ডারের জন্য প্রয়োজনীয় তথ্য</label>
+                <div id="orderFieldsContainer">
+                    <div class="order-field-item" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                        <input type="text" placeholder="ফিল্ডের নাম (যেমন: ওয়েবসাইটের নাম)" style="flex: 1;">
+                        <select style="width: 120px;" onchange="handleFieldTypeChange(this)">
+                            <option value="text">টেক্সট</option>
+                            <option value="number">নাম্বার</option>
+                            <option value="email">ইমেইল</option>
+                            <option value="url">ইউআরএল</option>
+                            <option value="textarea">বড় টেক্সট</option>
+                            <option value="select">বিকল্প তালিকা</option>
+                            <option value="checkbox">চেকবক্স</option>
+                            <option value="file">ফাইল</option>
+                        </select>
+                        <button type="button" onclick="removeOrderField(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">✕</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addOrderField()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px;">+ নতুন ফিল্ড যোগ করুন</button>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="window.addService()">সেবা যোগ করুন</button>
+                <button class="btn btn-danger" onclick="window.closeModal('addServiceModal')">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Service Modal -->
+    <div id="orderServiceModal" class="modal">
+        <div class="modal-content">
+            <h3 id="orderModalTitle">সেবা অর্ডার করুন</h3>
+            <div id="orderModalContent">
+                <!-- Order form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery Modal -->
+    <div id="deliveryModal" class="modal">
+        <div class="modal-content">
+            <h3 id="deliveryModalTitle">ডেলিভারি পাঠান</h3>
+            <div id="deliveryOrderInfo" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <!-- Order info will be loaded here -->
+            </div>
+            
+            <div class="form-group">
+                <label>ডেলিভারি টেক্সট/বার্তা</label>
+                <textarea id="deliveryText" rows="4" placeholder="ক্রেতার জন্য কোনো বার্তা বা নির্দেশনা লিখুন..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>ডেলিভারি ফাইল (যদি থাকে)</label>
+                <div class="file-upload" id="deliveryFileUpload" onclick="document.getElementById('deliveryFileInput').click()" style="cursor: pointer;">
+                    <p>ফাইল এখানে ড্রাগ করুন বা ক্লিক করে নির্বাচন করুন</p>
+                    <input type="file" id="deliveryFileInput" style="display: none;" multiple accept="*/*">
+                </div>
+                <div id="deliverySelectedFiles" style="margin-top: 10px;"></div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-success" onclick="window.sendDelivery()">ডেলিভারি পাঠান</button>
+                <button class="btn btn-danger" onclick="window.closeModal('deliveryModal')">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div id="editServiceModal" class="modal">
+        <div class="modal-content">
+            <h3>সেবা সম্পাদনা করুন</h3>
+            <div class="form-group">
+                <label>সেবার নাম</label>
+                <input type="text" id="editServiceName" placeholder="সেবার নাম লিখুন">
+            </div>
+            <div class="form-group">
+                <label>বিবরণ</label>
+                <textarea id="editServiceDescription" rows="3" placeholder="সেবার বিস্তারিত বিবরণ"></textarea>
+            </div>
+            <div class="form-group">
+                <label>মূল্য (টাকা)</label>
+                <input type="number" id="editServicePrice" placeholder="মূল্য লিখুন">
+            </div>
+            <div class="form-group">
+                <label>ডেলিভারি সময় (দিন)</label>
+                <input type="number" id="editDeliveryTime" placeholder="কত দিন লাগবে">
+            </div>
+            
+            <div class="form-group">
+                <label>অর্ডারের জন্য প্রয়োজনীয় তথ্য</label>
+                <div id="editOrderFieldsContainer">
+                    <!-- Order fields will be loaded here -->
+                </div>
+                <button type="button" onclick="window.addEditOrderField()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px;">+ নতুন ফিল্ড যোগ করুন</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="window.saveEditedService()">সংরক্ষণ করুন</button>
+                <button class="btn btn-danger" onclick="window.closeModal('editServiceModal')">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Delivery Modal -->
+    <div id="viewDeliveryModal" class="modal">
+        <div class="modal-content">
+            <h3>ডেলিভারি দেখুন</h3>
+            <div id="deliveryContent">
+                <!-- Delivery content will be loaded here -->
+            </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="window.closeModal('viewDeliveryModal')">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Info -->
+    <div id="debugInfo" class="debug-info" style="display: none;">
+        <div>User: <span id="debugUser">-</span></div>
+        <div>Type: <span id="debugUserType">-</span></div>
+        <div>Services: <span id="debugServices">0</span></div>
+        <div>Orders: <span id="debugOrders">0</span></div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, onValue, update, remove, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getMessaging, getToken, onMessage }
+           from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAamQRagtFolZ8-E2tzRno3BooY0T0n-Ik",
+            authDomain: "abir-vhai.firebaseapp.com",
+            databaseURL: "https://abir-vhai-default-rtdb.firebaseio.com",
+            projectId: "abir-vhai",
+            storageBucket: "abir-vhai.firebasestorage.app",
+            messagingSenderId: "819633836891",
+            appId: "1:819633836891:web:a519975e5372936847007e",
+            measurementId: "G-SJ3HLRV8Q8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        const storage = getStorage(app);
+        const messaging = getMessaging(app);
+
+        // Global variables
+        window.auth = auth;
+        window.database = database;
+        window.storage = storage;
+        window.currentUser = null;
+        window.currentUserData = null;
+        window.services = {};
+        window.orders = {};
+        window.isAdmin = false;
+
+        const vapidKey = "BBJP4NJ_8wD3TDeCA9BrwMefLvCeTzMhD1mGb1aZ5KcU0fwRhvRxmuaGPtAmMIXWgH5FSQU03TiIHIC3yyH0UTbA";
+
+            async function registerFCM() {
+              const permission = await Notification.requestPermission();
+              if (permission === 'granted') {
+                const token = await getToken(messaging,{ vapidKey });
+                console.log("✅ FCM Token:", token);
+                // লগইন করা ইউজারের UID বা Email ব্যবহার করে টোকেন সেভ করো
+                // উদাহরণ:
+                const uid = window.currentUser?.uid || "guest";
+                await set(ref(database, `fcmTokens/${uid}`), token);
+
+              } else {
+                console.log("❌ Notification permission denied");
+              }
+            }
+            registerFCM();
+            
+            // ফোরগ্রাউন্ড নোটিফিকেশন
+            onMessage(messaging, payload => {
+              new Notification(payload.notification.title, {
+                body: payload.notification.body
+              });
+            });
+                
+        // Show notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Debug function
+        function updateDebugInfo() {
+            if (window.currentUser) {
+                document.getElementById('debugUser').textContent = window.currentUser.email;
+                document.getElementById('debugUserType').textContent = window.isAdmin ? 'Admin' : 'User';
+            } else {
+                document.getElementById('debugUser').textContent = 'None';
+                document.getElementById('debugUserType').textContent = '-';
+            }
+            document.getElementById('debugServices').textContent = Object.keys(window.services).length;
+            document.getElementById('debugOrders').textContent = Object.keys(window.orders).length;
+        }
+
+        // Toggle debug info
+        window.toggleDebug = function() {
+            const debug = document.getElementById('debugInfo');
+            debug.style.display = debug.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // Helper function to sanitize phone number for Firebase key
+        function sanitizePhoneForKey(phone) {
+            // Remove all non-digit characters and ensure it's 11 digits
+            const cleaned = phone.replace(/\D/g, '');
+            // Add 'bd_' prefix to make it a valid Firebase key
+            return 'bd_' + cleaned;
+        }
+
+        // Validate Bangladesh phone number
+        function isValidBDPhone(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            // Check if it's 11 digits and starts with 01
+            return cleaned.length === 11 && cleaned.startsWith('01');
+        }
+
+        // Authentication state observer
+        onAuthStateChanged(auth, async (user) => {
+            console.log('Auth state changed:', user ? user.email : 'No user');
+            
+            if (user) {
+                window.currentUser = user;
+                
+                // Get user data from database using email to find their phone-based record
+                const userData = await getUserDataByEmail(user.email);
+                if (userData) {
+                    window.currentUserData = userData;
+                    window.isAdmin = userData.userType === 'admin';
+                } else {
+                    // If no user data exists, create default user data
+                    window.currentUserData = {
+                        name: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        userType: 'user',
+                        uid: user.uid
+                    };
+                    window.isAdmin = false;
+                }
+
+                console.log('User Type:', window.currentUserData.userType, 'Is Admin:', window.isAdmin);
+                
+                // Show appropriate dashboard
+                showDashboard(window.isAdmin ? 'admin' : 'user');
+                
+                // Load data
+                await loadServices();
+                await loadOrders();
+                
+                updateDebugInfo();
+                
+            } else {
+                console.log('No user logged in');
+                window.currentUser = null;
+                window.currentUserData = null;
+                window.isAdmin = false;
+                showAuthSection();
+                updateDebugInfo();
+            }
+        });
+
+        // Get user data by searching through usersByNumber using email
+        async function getUserDataByEmail(email) {
+            try {
+                const usersRef = ref(database, 'usersByNumber');
+                const snapshot = await get(usersRef);
+                
+                if (snapshot.exists()) {
+                    const users = snapshot.val();
+                    // Find user by email
+                    for (const [phoneKey, userData] of Object.entries(users)) {
+                        if (userData.email === email) {
+                            return userData;
+                        }
+                    }
+                }
+                return null;
+            } catch (error) {
+                console.error('Error getting user data:', error);
+                return null;
+            }
+        }
+
+        // Show Auth Section
+        function showAuthSection() {
+            console.log('📋 Showing auth section');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('userDashboard').classList.remove('active');
+            document.getElementById('adminDashboard').classList.remove('active');
+        }
+
+        // Show Dashboard
+        function showDashboard(userType) {
+            console.log('🚀 Showing dashboard for:', userType);
+            
+            document.getElementById('authSection').classList.add('hidden');
+            
+            const displayName = window.currentUserData ? window.currentUserData.name : 'ব্যবহারকারী';
+            
+            if (userType === 'admin') {
+                document.getElementById('adminDashboard').classList.add('active');
+                document.getElementById('userDashboard').classList.remove('active');
+                
+                const adminNameElement = document.getElementById('adminName');
+                const adminAvatarElement = document.getElementById('adminAvatar');
+                
+                if (adminNameElement) adminNameElement.textContent = displayName;
+                if (adminAvatarElement) adminAvatarElement.textContent = displayName[0].toUpperCase();
+            } else {
+                document.getElementById('userDashboard').classList.add('active');
+                document.getElementById('adminDashboard').classList.remove('active');
+                
+                const userNameElement = document.getElementById('userName');
+                const userAvatarElement = document.getElementById('userAvatar');
+                
+                if (userNameElement) userNameElement.textContent = displayName;
+                if (userAvatarElement) userAvatarElement.textContent = displayName[0].toUpperCase();
+            }
+        }
+
+        // Load services with clean naming
+        async function loadServices() {
+            console.log('📦 Loading services...');
+            
+            try {
+                const servicesRef = ref(database, 'services');
+                const snapshot = await get(servicesRef);
+                window.services = snapshot.val() || {};
+                
+                console.log('📦 Services loaded:', Object.keys(window.services).length);
+                displayServices();
+                updateDebugInfo();
+                
+                // Keep listening for changes
+                onValue(servicesRef, (snapshot) => {
+                    window.services = snapshot.val() || {};
+                    displayServices();
+                    updateDebugInfo();
+                });
+                
+            } catch (error) {
+                console.error('Error loading services:', error);
+                window.services = {};
+                displayServices();
+            }
+        }
+
+        // Load orders with clean naming
+        async function loadOrders() {
+            console.log('📋 Loading orders...');
+            
+            try {
+                const ordersRef = ref(database, 'orders');
+                const snapshot = await get(ordersRef);
+                window.orders = snapshot.val() || {};
+                
+                console.log('📋 Orders loaded:', Object.keys(window.orders).length);
+                displayOrders();
+                updateDebugInfo();
+                
+                // Keep listening for changes
+                onValue(ordersRef, (snapshot) => {
+                    window.orders = snapshot.val() || {};
+                    displayOrders();
+                    updateDebugInfo();
+                });
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                window.orders = {};
+                displayOrders();
+            }
+        }
+
+        // Get next sequential ID
+        async function getNextServiceId() {
+            try {
+                const servicesRef = ref(database, 'services');
+                const snapshot = await get(servicesRef);
+                const services = snapshot.val() || {};
+                
+                // Find the highest service number
+                let maxNum = 0;
+                Object.keys(services).forEach(key => {
+                    if (key.startsWith('service')) {
+                        const num = parseInt(key.replace('service', ''));
+                        if (num > maxNum) maxNum = num;
+                    }
+                });
+                
+                return `service${maxNum + 1}`;
+            } catch (error) {
+                console.error('Error getting next service ID:', error);
+                return `service1`;
+            }
+        }
+
+        // Get next sequential order ID
+        async function getNextOrderId() {
+            try {
+                const ordersRef = ref(database, 'orders');
+                const snapshot = await get(ordersRef);
+                const orders = snapshot.val() || {};
+                
+                // Find the highest order number
+                let maxNum = 0;
+                Object.keys(orders).forEach(key => {
+                    if (key.startsWith('order')) {
+                        const num = parseInt(key.replace('order', ''));
+                        if (num > maxNum) maxNum = num;
+                    }
+                });
+                
+                return `order${maxNum + 1}`;
+            } catch (error) {
+                console.error('Error getting next order ID:', error);
+                return `order1`;
+            }
+        }
+
+        // Create clean username
+        function createUsername(name, email) {
+            // Remove spaces and special characters, make lowercase
+            let username = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            
+            // If username is too short, use email prefix
+            if (username.length < 3) {
+                username = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+            }
+            
+            // Add timestamp suffix to make it unique
+            const timestamp = Date.now().toString().slice(-4);
+            return `${username}_${timestamp}`;
+        }
+
+        // Display Services
+        function displayServices() {
+            const userGrid = document.getElementById('servicesGrid');
+            const adminGrid = document.getElementById('adminServicesGrid');
+            
+            let userHTML = '';
+            let adminHTML = '';
+
+            const serviceEntries = Object.entries(window.services);
+            console.log('Displaying services:', serviceEntries.length);
+
+            for (const [id, service] of serviceEntries) {
+                const serviceCard = `
+                    <div class="service-card">
+                        <div class="service-title">${service.name}</div>
+                        <div class="service-description">${service.description}</div>
+                        <div class="service-price">৳${service.price}</div>
+                        <div style="color: #666; margin-bottom: 15px;">ডেলিভারি: ${service.deliveryTime} দিন</div>
+                        <button class="btn btn-primary" onclick="window.orderService('${id}')">অর্ডার করুন</button>
+                    </div>
+                `;
+
+                userHTML += serviceCard;
+                
+                adminHTML += `
+                    <div class="service-card">
+                        <div class="service-title">${service.name}</div>
+                        <div class="service-description">${service.description}</div>
+                        <div class="service-price">৳${service.price}</div>
+                        <div style="color: #666; margin-bottom: 15px;">ডেলিভারি: ${service.deliveryTime} দিন</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-warning" onclick="window.editService('${id}')">সম্পাদনা</button>
+                            <button class="btn btn-danger" onclick="window.deleteService('${id}')">মুছুন</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (userGrid) userGrid.innerHTML = userHTML || '<p>কোন সেবা উপলব্ধ নেই</p>';
+            if (adminGrid) adminGrid.innerHTML = adminHTML || '<p>কোন সেবা যোগ করা হয়নি</p>';
+        }
+
+        // Display Orders
+        function displayOrders() {
+            const userOrders = document.getElementById('userOrders');
+            const adminOrders = document.getElementById('adminOrders');
+            
+            let userHTML = '';
+            let adminHTML = '';
+
+            const orderEntries = Object.entries(window.orders).sort((a, b) => b[1].createdAt - a[1].createdAt);
+            console.log('📋 Displaying orders:', orderEntries.length, 'Current user:', window.currentUser?.email, 'Is Admin:', window.isAdmin);
+
+            for (const [orderId, order] of orderEntries) {
+                console.log('Processing order:', orderId, order);
+                
+                const service = window.services[order.serviceId];
+                if (!service) {
+                    console.log('⚠️ Service not found for order:', orderId, order.serviceId);
+                }
+
+                const statusClass = `status-${order.status}`;
+                const statusText = {
+                    'pending': 'অপেক্ষমান',
+                    'processing': 'প্রক্রিয়াধীন', 
+                    'completed': 'সম্পন্ন্‌',
+                    'cancel' : 'বাতিল'
+                }[order.status] || order.status;
+
+                const serviceName = service ? service.name : `সেবা (${order.serviceId})`;
+
+                const orderCard = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <h4>${serviceName}</h4>
+                                <p style="color: #666; margin: 5px 0;">অর্ডার ID: ${orderId}</p>
+                                <p style="color: #666; margin: 5px 0;">তারিখ: ${new Date(order.createdAt).toLocaleDateString('bn-BD')}</p>
+                                ${order.orderData ? `
+                                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                                        <strong>অর্ডারের তথ্য:</strong>
+                                        ${Object.entries(order.orderData).map(([key, value]) => `<p style="margin: 2px 0; font-size: 14px;"><strong>${key}:</strong> ${value}</p>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <span class="order-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <div>
+                                <strong>মূল্য: ৳${order.amount}</strong>
+                                ${order.requirements ? `<p style="margin: 5px 0; color: #666;">প্রয়োজনীয়তা: ${order.requirements}</p>` : ''}
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                ${(order.userId === window.currentUser?.uid || order.userEmail === window.currentUser?.email) &&
+                                   service?.orderFields?.some(f => f.type === "file")
+                                     ? `<button class="btn btn-primary" onclick="window.uploadClientFiles('${orderId}')">ফাইল আপলোড</button>`
+                                     : ''
+                             }
+                                 
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Show order to user if it's their order
+                if (order.userId === window.currentUser?.uid || order.userEmail === window.currentUser?.email) {
+                    userHTML += orderCard;
+                    console.log('✅ Added order to user view:', orderId);
+                }
+
+                // Admin sees ALL orders regardless of user match
+                const adminOrderCard = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <h4>${serviceName}</h4>
+                                <p style="color: #666; margin: 5px 0;">অর্ডার ID: ${orderId}</p>
+                                <p style="color: #666; margin: 5px 0;">ক্রেতা: ${order.userEmail || order.userName || 'Unknown'}</p>
+                                <p style="color: #666; margin: 5px 0;">তারিখ: ${new Date(order.createdAt).toLocaleDateString('bn-BD')}</p>
+                                ${order.orderData ? `
+                                    <div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                                        <strong>অর্ডারের বিস্তারিত:</strong>
+                                        ${Object.entries(order.orderData).map(([key, value]) => `<p style="margin: 2px 0; font-size: 14px;"><strong>${key}:</strong> ${value}</p>`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <span class="order-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>মূল্য: ৳${order.amount}</strong>
+                                    ${order.requirements ? `<p style="margin: 5px 0; color: #666;">প্রয়োজনীয়তা: ${order.requirements}</p>` : ''}
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <select id="status_${orderId}" onchange="updateOrderStatus('${orderId}', this.value)" style="padding: 5px;">
+                                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>অপেক্ষমান</option>
+                                        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>প্রক্রিয়াধীন</option>
+                                        <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>সম্পন্ন</option>
+                                        <option value="cancel" ${order.status === 'cancel' ? 'selected' : ''}>বাতিল</option>
+                                    </select>
+                                    <button class="btn btn-primary" onclick="window.uploadDeliveryFiles('${orderId}')" style="padding: 5px 10px; font-size: 14px;">ডেলিভারি পাঠান</button>
+                                    ${order.clientFiles ? `<button class="btn btn-success" onclick="window.viewClientFiles('${orderId}')" style="padding: 5px 10px; font-size: 14px;">ক্রেতার ফাইল</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                adminHTML += adminOrderCard;
+                console.log('✅ Added order to admin view:', orderId);
+            }
+
+            // Update user orders
+            if (userOrders) {
+                userOrders.innerHTML = userHTML || '<p>কোন অর্ডার নেই</p>';
+                console.log('👤 User orders displayed:', userHTML ? orderEntries.filter(([_, order]) => order.userId === window.currentUser?.uid || order.userEmail === window.currentUser?.email).length : 0);
+            }
+            
+            // Update admin orders  
+            if (adminOrders) {
+                adminOrders.innerHTML = adminHTML || '<p>কোন অর্ডার নেই</p>';
+                console.log('👨‍💼 Admin orders displayed:', orderEntries.length, 'Is admin panel visible:', !adminOrders.classList.contains('hidden'));
+            }
+            
+            console.log('📊 Order display summary:', {
+                totalOrders: orderEntries.length,
+                userOrdersShown: userHTML ? 'Yes' : 'No',
+                adminOrdersShown: adminHTML ? 'Yes' : 'No',
+                isAdmin: window.isAdmin
+            });
+
+            // Update report stats if reports tab is visible
+            if (window.isAdmin && !document.getElementById('adminReportsTab').classList.contains('hidden')) {
+                updateReportStats();
+            }
+        }
+
+        // Global window functions
+        window.showAuthTab = function(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showAuthTab('${tab}')"]`).classList.add('active');
+            
+            if (tab === 'login') {
+                document.getElementById('loginTab').classList.remove('hidden');
+                document.getElementById('registerTab').classList.add('hidden');
+            } else {
+                document.getElementById('loginTab').classList.add('hidden');
+                document.getElementById('registerTab').classList.remove('hidden');
+            }
+        };
+
+        window.register = async function() {
+            const name = document.getElementById('registerName').value;
+            const phone = document.getElementById('registerPhone').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !phone || !email || !password) {
+                showNotification('সব ক্ষেত্র পূরণ করুন', 'error');
+                return;
+            }
+
+            // Validate phone number
+            if (!isValidBDPhone(phone)) {
+                showNotification('সঠিক ফোন নাম্বার দিন (01XXXXXXXXX)', 'error');
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Sanitize phone for Firebase key
+                const phoneKey = sanitizePhoneForKey(phone);
+                
+                // Check if this phone number already exists
+                const existingUserRef = ref(database, 'usersByNumber/' + phoneKey);
+                const existingSnapshot = await get(existingUserRef);
+                
+                if (existingSnapshot.exists()) {
+                    // Phone number already registered
+                    showNotification('এই ফোন নাম্বার দিয়ে ইতিমধ্যে রেজিস্টার হয়েছে', 'error');
+                    // Delete the created user since phone is duplicate
+                    await user.delete();
+                    return;
+                }
+
+                // Save user data using phone as key
+                await set(ref(database, 'usersByNumber/' + phoneKey), {
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    userType: 'user',  // Default to 'user', admin can be set manually
+                    uid: user.uid,
+                    phoneKey: phoneKey,
+                    createdAt: Date.now()
+                });
+
+                showNotification('অ্যাকাউন্ট তৈরি হয়েছে!', 'success');
+            } catch (error) {
+                showNotification(error.message, 'error');
+                console.error(error);
+            }
+        };
+
+        window.login = async function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showNotification('ইমেইল ও পাসওয়ার্ড দিন', 'error');
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showNotification('লগইন সফল!', 'success');
+            } catch (error) {
+                showNotification('লগইন ব্যর্থ!', 'error');
+                console.error(error);
+            }
+        };
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                showNotification('লগআউট হয়েছে', 'info');
+            } catch (error) {
+                showNotification('লগআউট ব্যর্থ', 'error');
+            }
+        };
+
+        window.showAdminTab = function(tab) {
+            document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showAdminTab('${tab}')"]`).classList.add('active');
+            
+            // Hide all tabs
+            document.getElementById('adminServicesTab').classList.add('hidden');
+            document.getElementById('adminOrdersTab').classList.add('hidden');
+            document.getElementById('adminReportsTab').classList.add('hidden');
+            
+            // Show selected tab
+            if (tab === 'services') {
+                document.getElementById('adminServicesTab').classList.remove('hidden');
+            } else if (tab === 'orders') {
+                document.getElementById('adminOrdersTab').classList.remove('hidden');
+            } else if (tab === 'reports') {
+                document.getElementById('adminReportsTab').classList.remove('hidden');
+                updateReportStats();
+                showOrdersByStatus('all');
+            }
+        };
+
+        // Update report statistics
+        function updateReportStats() {
+            const orders = Object.values(window.orders);
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(order => order.status === 'pending').length;
+            const processingOrders = orders.filter(order => order.status === 'processing').length;
+            const completedOrders = orders.filter(order => order.status === 'completed').length;
+            const cancelOrders = orders.filter(order => order.status === 'cancel').length;
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+            document.getElementById('processingOrders').textContent = processingOrders;
+            document.getElementById('completedOrders').textContent = completedOrders;
+            document.getElementById('cancelOrders').textContent = cancelOrders;
+
+            console.log('📊 Report stats updated:', {
+                total: totalOrders,
+                pending: pendingOrders,
+                processing: processingOrders,
+                completed: completedOrders,
+                cancel: cancelOrders
+            });
+        }
+
+        // Show orders filtered by status (Read-only for reports)
+        window.showOrdersByStatus = function(status) {
+            // Update active filter button
+            document.querySelectorAll('.report-filters .btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showOrdersByStatus('${status}')"]`).classList.add('active');
+
+            const reportOrders = document.getElementById('reportOrders');
+            let filteredHTML = '';
+
+            const orderEntries = Object.entries(window.orders).sort((a, b) => b[1].createdAt - a[1].createdAt);
+            const filteredOrders = status === 'all' 
+                ? orderEntries 
+                : orderEntries.filter(([_, order]) => order.status === status);
+
+            console.log(`🔍 Filtering orders by status: ${status}, Found: ${filteredOrders.length}`);
+
+            for (const [orderId, order] of filteredOrders) {
+                const service = window.services[order.serviceId];
+                const serviceName = service ? service.name : `সেবা (${order.serviceId})`;
+
+                const statusClass = `status-${order.status}`;
+                const statusText = {
+                    'pending': 'অপেক্ষমান',
+                    'processing': 'প্রক্রিয়াধীন', 
+                    'completed': 'সম্পন্ন',
+                    'cancel' : 'বাতিল'
+                }[order.status] || order.status;
+
+                const statusBadgeColor = {
+                    'pending': '#ffc107',
+                    'processing': '#17a2b8',
+                    'completed': '#28a745',
+                    'cancel': '#ff0000'
+                }[order.status] || '#6c757d';
+
+                filteredHTML += `
+                    <div class="order-card" style="margin-bottom: 15px;">
+                        <div class="order-header">
+                            <div>
+                                <h4>${serviceName}</h4>
+                                <div style="display: flex; gap: 15px; margin: 8px 0; flex-wrap: wrap;">
+                                    <span style="color: #666; font-size: 14px;"><strong>অর্ডার ID:</strong> ${orderId}</span>
+                                    <span style="color: #666; font-size: 14px;"><strong>ক্রেতা:</strong> ${order.userEmail || 'Unknown'}</span>
+                                    <span style="color: #666; font-size: 14px;"><strong>তারিখ:</strong> ${new Date(order.createdAt).toLocaleDateString('bn-BD')}</span>
+                                    <span style="color: #666; font-size: 14px;"><strong>মূল্য:</strong> ৳${order.amount}</span>
+                                </div>
+                                
+                                ${order.orderData ? `
+                                    <div style="margin: 10px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 3px solid ${statusBadgeColor};">
+                                        <strong style="color: #333; font-size: 15px;">অর্ডার বিবরণ:</strong>
+                                        <div style="margin-top: 8px;">
+                                            ${Object.entries(order.orderData).map(([key, value]) => 
+                                                `<div style="margin: 5px 0; font-size: 14px; display: flex; gap: 8px;">
+                                                    <strong style="color: #495057; min-width: 100px;">${key}:</strong> 
+                                                    <span style="color: #6c757d;">${value}</span>
+                                                </div>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                ${order.requirements ? `
+                                    <div style="margin: 10px 0; padding: 10px; background: #e9ecef; border-radius: 5px;">
+                                        <strong style="color: #495057;">বিশেষ নির্দেশনা:</strong> 
+                                        <span style="color: #6c757d;">${order.requirements}</span>
+                                    </div>
+                                ` : ''}
+
+                                ${order.updatedAt ? `
+                                    <div style="margin: 8px 0; font-size: 13px; color: #6c757d;">
+                                        <strong>শেষ আপডেট:</strong> ${new Date(order.updatedAt).toLocaleString('bn-BD')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <span class="order-status ${statusClass}" style="background: ${statusBadgeColor}; color: white;">${statusText}</span>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6; text-align: right;">
+                            <button class="btn btn-info" onclick="viewOrderDetails('${orderId}')" style="padding: 6px 12px; font-size: 13px;">বিস্তারিত দেখুন</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (reportOrders) {
+                const statusLabels = {
+                    'all': 'কোনো',
+                    'pending': 'অপেক্ষমান',
+                    'processing': 'প্রক্রিয়াধীন',
+                    'completed': 'সম্পন্ন',
+                    'cancel' : 'বাতিল'
+                };
+
+                reportOrders.innerHTML = filteredHTML || `
+                    <div style="text-align: center; padding: 40px; color: #6c757d; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                        <p style="font-size: 18px; margin-bottom: 10px;">${statusLabels[status]} অর্ডার পাওয়া যায়নি</p>
+                        <p style="font-size: 14px;">এই ক্যাটেগরিতে কোনো অর্ডার নেই।</p>
+                    </div>
+                `;
+            }
+        };
+
+        // View order details function
+        window.viewOrderDetails = function(orderId) {
+            const order = window.orders[orderId];
+            const service = window.services[order.serviceId];
+            
+            if (!order) return;
+
+            let detailsHTML = `
+                <div style="max-width: 600px;">
+                    <h3 style="color: #333; margin-bottom: 20px;">অর্ডার বিস্তারিত</h3>
+                    
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: #495057; margin-bottom: 15px;">মূল তথ্য</h4>
+                        <div style="display: grid; gap: 10px;">
+                            <div><strong>অর্ডার ID:</strong> ${orderId}</div>
+                            <div><strong>সেবা:</strong> ${service ? service.name : 'অজানা সেবা'}</div>
+                            <div><strong>ক্রেতা:</strong> ${order.userEmail}</div>
+                            <div><strong>অর্ডারের তারিখ:</strong> ${new Date(order.createdAt).toLocaleString('bn-BD')}</div>
+                            <div><strong>মূল্য:</strong> ৳${order.amount}</div>
+                            <div><strong>বর্তমান অবস্থা:</strong> <span class="order-status status-${order.status}">${{
+                                'pending': 'অপেক্ষমান',
+                                'processing': 'প্রক্রিয়াধীন',
+                                'completed': 'সম্পন্ন',
+                                'cancel' : 'বাতিল'
+                            }[order.status]}</span></div>
+                        </div>
+                    </div>
+
+                    ${order.orderData ? `
+                        <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="color: #0056b3; margin-bottom: 15px;">অর্ডার বিবরণ</h4>
+                            ${Object.entries(order.orderData).map(([key, value]) => 
+                                `<div style="margin-bottom: 10px;">
+                                    <strong style="color: #495057;">${key}:</strong> 
+                                    <span style="color: #6c757d;">${value}</span>
+                                </div>`
+                            ).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${order.requirements ? `
+                        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="color: #856404; margin-bottom: 10px;">বিশেষ নির্দেশনা</h4>
+                            <p style="color: #856404; margin: 0; line-height: 1.5;">${order.requirements}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Create and show modal
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    ${detailsHTML}
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove()">বন্ধ করুন</button>
+                    </div>
+                </div>
+            `;
+            
+            // Close modal when clicking outside
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+            
+            document.body.appendChild(modal);
+        };
+
+        window.openAddServiceModal = function() {
+            resetAddServiceModal();
+            document.getElementById('addServiceModal').classList.add('active');
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        };
+
+        window.addService = async function() {
+            const name = document.getElementById('serviceName').value;
+            const description = document.getElementById('serviceDescription').value;
+            const price = document.getElementById('servicePrice').value;
+            const deliveryTime = document.getElementById('deliveryTime').value;
+
+            if (!name || !description || !price || !deliveryTime) {
+                showNotification('সব ক্ষেত্র পূরণ করুন', 'error');
+                return;
+            }
+
+            // Collect order fields
+            const orderFields = [];
+            const fieldItems = document.querySelectorAll('#orderFieldsContainer .order-field-item');
+            
+            fieldItems.forEach(item => {
+                const nameInput = item.querySelector('input[type="text"]');
+                const typeSelect = item.querySelector('select');
+                const optionsInput = item.querySelector('.field-options');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    const field = {
+                        name: nameInput.value.trim(),
+                        type: typeSelect.value,
+                        required: true
+                    };
+                    
+                    if (typeSelect.value === 'select' && optionsInput && optionsInput.value.trim()) {
+                        field.options = optionsInput.value.split(',').map(opt => opt.trim());
+                    }
+                    
+                    orderFields.push(field);
+                }
+            });
+
+            try {
+                const serviceId = await getNextServiceId();
+                console.log('Creating service with ID:', serviceId);
+                
+                await set(ref(database, 'services/' + serviceId), {
+                    id: serviceId,
+                    name: name,
+                    description: description,
+                    price: parseInt(price),
+                    deliveryTime: parseInt(deliveryTime),
+                    orderFields: orderFields,
+                    createdAt: Date.now(),
+                    createdBy: window.currentUserData ? window.currentUserData.name : window.currentUser.email
+                });
+
+                showNotification('নতুন সেবা যোগ হয়েছে!', 'success');
+                window.closeModal('addServiceModal');
+                resetAddServiceModal();
+            } catch (error) {
+                showNotification('সেবা যোগ করতে ব্যর্থ', 'error');
+                console.error(error);
+            }
+        };
+
+        window.orderService = function(serviceId) {
+            const service = window.services[serviceId];
+            if (!service) return;
+
+            let modalContent = `
+                <div class="service-title">${service.name}</div>
+                <div class="service-description">${service.description}</div>
+                <div class="service-price">৳${service.price}</div>
+                <div style="color: #666; margin-bottom: 20px;">ডেলিভারি: ${service.deliveryTime} দিন</div>
+            `;
+
+            // Add custom order fields
+            if (service.orderFields && service.orderFields.length > 0) {
+                modalContent += '<div style="margin: 20px 0;"><h4>প্রয়োজনীয় তথ্য:</h4>';
+                
+                service.orderFields.forEach((field, index) => {
+                    modalContent += `<div class="form-group">`;
+                    modalContent += `<label>${field.name} ${field.required ? '*' : ''}</label>`;
+                    
+                    switch (field.type) {
+                        case 'textarea':
+                            modalContent += `<textarea id="orderField_${index}" rows="3" placeholder="${field.name} লিখুন..."></textarea>`;
+                            break;
+                        case 'select':
+                            modalContent += `<select id="orderField_${index}">`;
+                            modalContent += `<option value="">নির্বাচন করুন</option>`;
+                            if (field.options) {
+                                field.options.forEach(option => {
+                                    modalContent += `<option value="${option}">${option}</option>`;
+                                });
+                            }
+                            modalContent += `</select>`;
+                            break;
+                        case 'checkbox':
+                            modalContent += `<label style="display: flex; align-items: center; gap: 8px; font-weight: normal;"><input type="checkbox" id="orderField_${index}"> ${field.name}</label>`;
+                            break;
+                        case 'file':
+                            modalContent += `<input type="file" id="orderField_${index}" multiple accept="*/*">`;
+                            break;
+                        case 'number':
+                            modalContent += `<input type="number" id="orderField_${index}" placeholder="${field.name}">`;
+                            break;
+                        case 'email':
+                            modalContent += `<input type="email" id="orderField_${index}" placeholder="${field.name}">`;
+                            break;
+                        case 'url':
+                            modalContent += `<input type="url" id="orderField_${index}" placeholder="${field.name}">`;
+                            break;
+                        default:
+                            modalContent += `<input type="text" id="orderField_${index}" placeholder="${field.name}">`;
+                    }
+                    modalContent += `</div>`;
+                });
+                modalContent += '</div>';
+            }
+
+            modalContent += `
+                <div class="form-group">
+                    <label>অতিরিক্ত নোট (ঐচ্ছিক)</label>
+                    <textarea id="orderRequirements" rows="2" placeholder="কোনো বিশেষ নির্দেশনা থাকলে লিখুন..."></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="confirmOrder('${serviceId}')">অর্ডার নিশ্চিত করুন</button>
+                    <button class="btn btn-danger" onclick="closeModal('orderServiceModal')">বাতিল</button>
+                </div>
+            `;
+
+            document.getElementById('orderModalContent').innerHTML = modalContent;
+            document.getElementById('orderServiceModal').classList.add('active');
+        };
+
+        window.confirmOrder = async function(serviceId) {
+            const service = window.services[serviceId];
+            const requirements = document.getElementById('orderRequirements').value;
+
+            if (!window.currentUser) {
+                showNotification('প্রথমে লগইন করুন', 'error');
+                return;
+            }
+
+            // Collect custom field data
+            const orderData = {};
+            if (service.orderFields) {
+                for (let i = 0; i < service.orderFields.length; i++) {
+                    const field = service.orderFields[i];
+                    const fieldElement = document.getElementById(`orderField_${i}`);
+                    
+                    if (fieldElement) {
+                        let value;
+                        
+                        if (field.type === 'checkbox') {
+                            value = fieldElement.checked;
+                        } else if (field.type === 'file') {
+                            value = fieldElement.files.length > 0 ? 'ফাইল আপলোড করা হয়েছে' : '';
+                        } else {
+                            value = fieldElement.value;
+                        }
+                        
+                        if (field.required && (!value || value === '')) {
+                            showNotification(`${field.name} পূরণ করুন`, 'error');
+                            return;
+                        }
+                        
+                        orderData[field.name] = value;
+                    }
+                }
+            }
+
+            try {
+                const orderId = await getNextOrderId();
+                console.log('Creating order with ID:', orderId);
+                
+                await set(ref(database, 'orders/' + orderId), {
+                    id: orderId,
+                    serviceId: serviceId,
+                    serviceName: service.name,
+                    userId: window.currentUser.uid,
+                    userEmail: window.currentUser.email,
+                    userName: window.currentUserData ? window.currentUserData.name : window.currentUser.email.split('@')[0],
+                    amount: service.price,
+                    requirements: requirements,
+                    orderData: orderData,
+                    status: 'pending',
+                    createdAt: Date.now()
+                });
+
+                showNotification('অর্ডার সফলভাবে দেওয়া হয়েছে!', 'success');
+                window.closeModal('orderServiceModal');
+            } catch (error) {
+                showNotification('অর্ডার দিতে ব্যর্থ', 'error');
+                console.error(error);
+            }
+        };
+
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            try {
+                const orderRef = ref(database, 'orders/' + orderId);
+                await update(orderRef, {
+                    status: newStatus,
+                    updatedAt: Date.now()
+                });
+                showNotification('অর্ডারের অবস্থা আপডেট হয়েছে', 'success');
+            } catch (error) {
+                showNotification('আপডেট ব্যর্থ', 'error');
+                console.error(error);
+            }
+        };
+
+        window.deleteService = async function(serviceId) {
+            if (confirm('আপনি কি নিশ্চিত এই সেবা মুছে ফেলতে চান?')) {
+                try {
+                    const serviceRef = ref(database, 'services/' + serviceId);
+                    await remove(serviceRef);
+                    showNotification('সেবা মুছে ফেলা হয়েছে', 'success');
+                } catch (error) {
+                    showNotification('মুছতে ব্যর্থ', 'error');
+                    console.error(error);
+                }
+            }
+        };
+
+        window.editService = function(serviceId) {
+            const service = window.services[serviceId];
+            if (!service) {
+                showNotification('সেবা খুঁজে পাওয়া যায়নি', 'error');
+                return;
+            }
+
+            // Store current editing service ID
+            window.currentEditingServiceId = serviceId;
+
+            // Fill the form with current service data
+            document.getElementById('editServiceName').value = service.name || '';
+            document.getElementById('editServiceDescription').value = service.description || '';
+            document.getElementById('editServicePrice').value = service.price || '';
+            document.getElementById('editDeliveryTime').value = service.deliveryTime || '';
+
+            // Load existing order fields
+            loadEditOrderFields(service.orderFields || []);
+
+            // Show the modal
+            document.getElementById('editServiceModal').classList.add('active');
+        };
+
+        function loadEditOrderFields(orderFields) {
+            const container = document.getElementById('editOrderFieldsContainer');
+            container.innerHTML = '';
+
+            orderFields.forEach((field, index) => {
+                const fieldItem = document.createElement('div');
+                fieldItem.className = 'order-field-item';
+                fieldItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: center;';
+                
+                fieldItem.innerHTML = `
+                    <input type="text" value="${field.name}" placeholder="ফিল্ডের নাম" style="flex: 1;">
+                    <select style="width: 120px;" onchange="window.handleEditFieldTypeChange(this)">
+                        <option value="text" ${field.type === 'text' ? 'selected' : ''}>টেক্সট</option>
+                        <option value="number" ${field.type === 'number' ? 'selected' : ''}>নাম্বার</option>
+                        <option value="email" ${field.type === 'email' ? 'selected' : ''}>ইমেইল</option>
+                        <option value="url" ${field.type === 'url' ? 'selected' : ''}>ইউআরএল</option>
+                        <option value="textarea" ${field.type === 'textarea' ? 'selected' : ''}>বড় টেক্সট</option>
+                        <option value="select" ${field.type === 'select' ? 'selected' : ''}>বিকল্প তালিকা</option>
+                        <option value="checkbox" ${field.type === 'checkbox' ? 'selected' : ''}>চেকবক্স</option>
+                        <option value="file" ${field.type === 'file' ? 'selected' : ''}>ফাইল</option>
+                    </select>
+                    <button type="button" onclick="window.removeEditOrderField(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">✕</button>
+                `;
+                
+                // Add options input if it's a select field
+                if (field.type === 'select' && field.options) {
+                    const optionsInput = document.createElement('input');
+                    optionsInput.type = 'text';
+                    optionsInput.className = 'field-options';
+                    optionsInput.value = field.options.join(', ');
+                    optionsInput.placeholder = 'বিকল্পগুলো কমা দিয়ে আলাদা করুন';
+                    optionsInput.style.cssText = 'flex: 1; margin-left: 10px;';
+                    
+                    fieldItem.insertBefore(optionsInput, fieldItem.lastElementChild);
+                }
+                
+                container.appendChild(fieldItem);
+            });
+
+            // Add one empty field if no fields exist
+            if (orderFields.length === 0) {
+                window.addEditOrderField();
+            }
+        }
+
+        window.addEditOrderField = function() {
+            const container = document.getElementById('editOrderFieldsContainer');
+            const fieldItem = document.createElement('div');
+            fieldItem.className = 'order-field-item';
+            fieldItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: center;';
+            
+            fieldItem.innerHTML = `
+                <input type="text" placeholder="ফিল্ডের নাম (যেমন: ওয়েবসাইটের নাম)" style="flex: 1;">
+                <select style="width: 120px;" onchange="window.handleEditFieldTypeChange(this)">
+                    <option value="text">টেক্সট</option>
+                    <option value="number">নাম্বার</option>
+                    <option value="email">ইমেইল</option>
+                    <option value="url">ইউআরএল</option>
+                    <option value="textarea">বড় টেক্সট</option>
+                    <option value="select">বিকল্প তালিকা</option>
+                    <option value="checkbox">চেকবক্স</option>
+                    <option value="file">ফাইল</option>
+                </select>
+                <button type="button" onclick="window.removeEditOrderField(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">✕</button>
+            `;
+            
+            container.appendChild(fieldItem);
+        };
+
+        window.removeEditOrderField = function(button) {
+            button.parentElement.remove();
+        };
+
+        window.handleEditFieldTypeChange = function(select) {
+            const fieldItem = select.parentElement;
+            const existingOptions = fieldItem.querySelector('.field-options');
+            
+            if (existingOptions) {
+                existingOptions.remove();
+            }
+            
+            if (select.value === 'select') {
+                const optionsInput = document.createElement('input');
+                optionsInput.type = 'text';
+                optionsInput.className = 'field-options';
+                optionsInput.placeholder = 'বিকল্পগুলো কমা দিয়ে আলাদা করুন (যেমন: অপশন১, অপশন২)';
+                optionsInput.style.cssText = 'flex: 1; margin-left: 10px;';
+                
+                fieldItem.insertBefore(optionsInput, select.nextSibling);
+            }
+        };
+
+        window.saveEditedService = async function() {
+            const serviceId = window.currentEditingServiceId;
+            const name = document.getElementById('editServiceName').value;
+            const description = document.getElementById('editServiceDescription').value;
+            const price = document.getElementById('editServicePrice').value;
+            const deliveryTime = document.getElementById('editDeliveryTime').value;
+
+            if (!name || !description || !price || !deliveryTime) {
+                showNotification('সব ক্ষেত্র পূরণ করুন', 'error');
+                return;
+            }
+
+            // Collect order fields
+            const orderFields = [];
+            const fieldItems = document.querySelectorAll('#editOrderFieldsContainer .order-field-item');
+            
+            fieldItems.forEach(item => {
+                const nameInput = item.querySelector('input[type="text"]');
+                const typeSelect = item.querySelector('select');
+                const optionsInput = item.querySelector('.field-options');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    const field = {
+                        name: nameInput.value.trim(),
+                        type: typeSelect.value,
+                        required: true
+                    };
+                    
+                    if (typeSelect.value === 'select' && optionsInput && optionsInput.value.trim()) {
+                        field.options = optionsInput.value.split(',').map(opt => opt.trim());
+                    }
+                    
+                    orderFields.push(field);
+                }
+            });
+
+            try {
+                // Get existing service data
+                const existingService = window.services[serviceId];
+                
+                // Update service data
+                await update(ref(database, 'services/' + serviceId), {
+                    name: name,
+                    description: description,
+                    price: parseInt(price),
+                    deliveryTime: parseInt(deliveryTime),
+                    orderFields: orderFields,
+                    updatedAt: Date.now(),
+                    updatedBy: window.currentUserData ? window.currentUserData.name : window.currentUser.email
+                });
+
+                showNotification('সেবা সফলভাবে আপডেট হয়েছে!', 'success');
+                window.closeModal('editServiceModal');
+                
+                // Clear the stored service ID
+                window.currentEditingServiceId = null;
+                
+            } catch (error) {
+                showNotification('সেবা আপডেট করতে ব্যর্থ', 'error');
+                console.error(error);
+            }
+        };
+
+        // Order field management functions
+        window.addOrderField = function() {
+            const container = document.getElementById('orderFieldsContainer');
+            const fieldItem = document.createElement('div');
+            fieldItem.className = 'order-field-item';
+            fieldItem.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: center;';
+            
+            fieldItem.innerHTML = `
+                <input type="text" placeholder="ফিল্ডের নাম (যেমন: ওয়েবসাইটের নাম)" style="flex: 1;">
+                <select style="width: 120px;" onchange="handleFieldTypeChange(this)">
+                    <option value="text">টেক্সট</option>
+                    <option value="number">নাম্বার</option>
+                    <option value="email">ইমেইল</option>
+                    <option value="url">ইউআরএল</option>
+                    <option value="textarea">বড় টেক্সট</option>
+                    <option value="select">বিকল্প তালিকা</option>
+                    <option value="checkbox">চেকবক্স</option>
+                    <option value="file">ফাইল</option>
+                </select>
+                <button type="button" onclick="removeOrderField(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">✕</button>
+            `;
+            
+            container.appendChild(fieldItem);
+        };
+
+        window.removeOrderField = function(button) {
+            button.parentElement.remove();
+        };
+
+        window.handleFieldTypeChange = function(select) {
+            const fieldItem = select.parentElement;
+            const existingOptions = fieldItem.querySelector('.field-options');
+            
+            if (existingOptions) {
+                existingOptions.remove();
+            }
+            
+            if (select.value === 'select') {
+                const optionsInput = document.createElement('input');
+                optionsInput.type = 'text';
+                optionsInput.className = 'field-options';
+                optionsInput.placeholder = 'বিকল্পগুলো কমা দিয়ে আলাদা করুন (যেমন: অপশন১, অপশন২)';
+                optionsInput.style.cssText = 'flex: 1; margin-left: 10px;';
+                
+                fieldItem.insertBefore(optionsInput, select.nextSibling);
+            }
+        };
+
+        function resetAddServiceModal() {
+            document.getElementById('serviceName').value = '';
+            document.getElementById('serviceDescription').value = '';
+            document.getElementById('servicePrice').value = '';
+            document.getElementById('deliveryTime').value = '';
+            
+            // Reset order fields
+            const container = document.getElementById('orderFieldsContainer');
+            container.innerHTML = `
+                <div class="order-field-item" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                    <input type="text" placeholder="ফিল্ডের নাম (যেমন: ওয়েবসাইটের নাম)" style="flex: 1;">
+                    <select style="width: 120px;" onchange="handleFieldTypeChange(this)">
+                        <option value="text">টেক্সট</option>
+                        <option value="number">নাম্বার</option>
+                        <option value="email">ইমেইল</option>
+                        <option value="url">ইউআরএল</option>
+                        <option value="textarea">বড় টেক্সট</option>
+                        <option value="select">বিকল্প তালিকা</option>
+                        <option value="checkbox">চেকবক্স</option>
+                        <option value="file">ফাইল</option>
+                    </select>
+                    <button type="button" onclick="removeOrderField(this)" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">✕</button>
+                </div>
+            `;
+        }
+
+        // File upload functions - Enhanced delivery system
+        window.uploadDeliveryFiles = function(orderId) {
+            const order = window.orders[orderId];
+            if (!order) return;
+            
+            // Show delivery modal with order info
+            const modal = document.getElementById('deliveryModal');
+            const orderInfo = document.getElementById('deliveryOrderInfo');
+            const service = window.services[order.serviceId];
+            
+            orderInfo.innerHTML = `
+                <h4 style="color: #495057; margin-bottom: 10px;">অর্ডার তথ্য</h4>
+                <div><strong>অর্ডার ID:</strong> ${orderId}</div>
+                <div><strong>সেবা:</strong> ${service ? service.name : 'অজানা'}</div>
+                <div><strong>ক্রেতা:</strong> ${order.userEmail}</div>
+                <div><strong>মূল্য:</strong> ৳${order.amount}</div>
+            `;
+            
+            // Store current order ID for later use
+            window.currentDeliveryOrderId = orderId;
+            
+            // Clear previous data
+            document.getElementById('deliveryText').value = '';
+            document.getElementById('deliverySelectedFiles').innerHTML = '';
+            
+            modal.classList.add('active');
+        };
+
+        window.sendDelivery = async function() {
+            const orderId = window.currentDeliveryOrderId;
+            const deliveryText = document.getElementById('deliveryText').value;
+            const fileInput = document.getElementById('deliveryFileInput');
+            
+            if (!deliveryText.trim() && fileInput.files.length === 0) {
+                showNotification('কমপক্ষে একটি টেক্সট বার্তা বা ফাইল দিন', 'error');
+                return;
+            }
+
+            try {
+                const deliveryData = {
+                    text: deliveryText.trim(),
+                    files: [],
+                    deliveredAt: Date.now(),
+                    deliveredBy: window.currentUserData ? window.currentUserData.name : 'Admin'
+                };
+
+                // Handle file uploads (for now, just store file names)
+                if (fileInput.files.length > 0) {
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        deliveryData.files.push({
+                            name: file.name,
+                            size: file.size,
+                            type: file.type
+                        });
+                    }
+                }
+
+                // Update order with delivery data and mark as completed
+                const orderRef = ref(database, 'orders/' + orderId);
+                await update(orderRef, {
+                    status: 'completed',
+                    delivery: deliveryData,
+                    updatedAt: Date.now()
+                });
+
+                showNotification('ডেলিভারি সফলভাবে পাঠানো হয়েছে!', 'success');
+                window.closeModal('deliveryModal');
+                
+                // Clear the stored order ID
+                window.currentDeliveryOrderId = null;
+                
+            } catch (error) {
+                showNotification('ডেলিভারি পাঠাতে ব্যর্থ', 'error');
+                console.error(error);
+            }
+        };
+
+        window.viewDelivery = function(orderId) {
+            const order = window.orders[orderId];
+            if (!order || !order.delivery) {
+                showNotification('কোনো ডেলিভারি তথ্য নেই', 'error');
+                return;
+            }
+
+            const deliveryContent = document.getElementById('deliveryContent');
+            const service = window.services[order.serviceId];
+            
+            let contentHTML = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #495057; margin-bottom: 10px;">অর্ডার তথ্য</h4>
+                    <div><strong>অর্ডার ID:</strong> ${orderId}</div>
+                    <div><strong>সেবা:</strong> ${service ? service.name : 'অজানা'}</div>
+                    <div><strong>ডেলিভারি তারিখ:</strong> ${new Date(order.delivery.deliveredAt).toLocaleString('bn-BD')}</div>
+                    <div><strong>ডেলিভারি দ্বারা:</strong> ${order.delivery.deliveredBy}</div>
+                </div>
+            `;
+
+            if (order.delivery.text) {
+                contentHTML += `
+                    <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <h4 style="color: #0056b3; margin-bottom: 10px;">ডেলিভারি বার্তা</h4>
+                        <p style="margin: 0; line-height: 1.5; white-space: pre-wrap;">${order.delivery.text}</p>
+                    </div>
+                `;
+            }
+
+            if (order.delivery.files && order.delivery.files.length > 0) {
+                contentHTML += `
+                    <div style="background: #d4edda; padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #155724; margin-bottom: 10px;">ডেলিভারি ফাইলসমূহ</h4>
+                `;
+                
+                order.delivery.files.forEach(file => {
+                    const fileSizeKB = (file.size / 1024).toFixed(1);
+                    contentHTML += `
+                        <div style="padding: 8px; background: white; border-radius: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${file.name}</strong>
+                                <div style="font-size: 12px; color: #666;">${file.type} • ${fileSizeKB} KB</div>
+                            </div>
+                            <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;" onclick="window.downloadDeliveryFile('${orderId}', '${file.name}')">ডাউনলোড</button>
+                        </div>
+                    `;
+                });
+                
+                contentHTML += `</div>`;
+            }
+
+            deliveryContent.innerHTML = contentHTML;
+            document.getElementById('viewDeliveryModal').classList.add('active');
+        };
+
+        window.downloadDeliveryFile = function(orderId, fileName) {
+            showNotification('ফাইল ডাউনলোড feature শীঘ্রই আসছে', 'info');
+        };
+
+        // File input change handler for delivery
+        document.addEventListener('DOMContentLoaded', function() {
+            const deliveryFileInput = document.getElementById('deliveryFileInput');
+            const deliverySelectedFiles = document.getElementById('deliverySelectedFiles');
+            
+            if (deliveryFileInput) {
+                deliveryFileInput.addEventListener('change', function() {
+                    let fileListHTML = '';
+                    
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+                        const fileSizeKB = (file.size / 1024).toFixed(1);
+                        fileListHTML += `
+                            <div style="padding: 8px; background: #f8f9fa; border-radius: 4px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>${file.name}</strong>
+                                    <div style="font-size: 12px; color: #666;">${file.type} • ${fileSizeKB} KB</div>
+                                </div>
+                                <span style="color: #28a745;">✓</span>
+                            </div>
+                        `;
+                    }
+                    
+                    deliverySelectedFiles.innerHTML = fileListHTML;
+                });
+            }
+        });
+
+        // Initialize debug mode
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                window.toggleDebug();
+            }
+        });
+
+        console.log('Service Management Platform loaded');
+        console.log('Press Ctrl+Shift+D to toggle debug info');
+        console.log('To make someone admin, set userType: "admin" in Firebase database under usersByNumber/{phone_key}');
+        console.log('Phone format: 01712345678 becomes bd_01712345678');
+        
+        if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/firebase-messaging-sw.js')
+    .then(() => console.log('Service Worker registered'));
+}
+    </script>
+</body>
+</html>
